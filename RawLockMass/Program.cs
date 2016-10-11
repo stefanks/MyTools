@@ -20,10 +20,10 @@ namespace RawLockMass
             var dist1MZ = new IsotopicDistribution(Compound1.GetChemicalFormula(), 1, 0.001).Masses.Select(b => b.ToMassToChargeRatio(1)).ToList();
             Console.WriteLine("NNNNN mz: " + string.Join(", ", dist1MZ));
 
-            var chemFormulaOfCompound2 = Compound1.GetChemicalFormula();
-            chemFormulaOfCompound2.Add(new ChemicalFormula("N-1H-2"));
-            var dist2MZ = new IsotopicDistribution(chemFormulaOfCompound2, 1, 0.001).Masses.Select(b => b.ToMassToChargeRatio(1)).ToList();
-            Console.WriteLine("Compound2 mz: " + string.Join(", ", dist2MZ));
+            //var chemFormulaOfCompound2 = Compound1.GetChemicalFormula();
+            //chemFormulaOfCompound2.Add(new ChemicalFormula("N-1H-2"));
+            //var dist2MZ = new IsotopicDistribution(chemFormulaOfCompound2, 1, 0.001).Masses.Select(b => b.ToMassToChargeRatio(1)).ToList();
+            //Console.WriteLine("Compound2 mz: " + string.Join(", ", dist2MZ));
 
 
             foreach (var arg in args)
