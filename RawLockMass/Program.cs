@@ -33,28 +33,33 @@ namespace RawLockMass
 
             foreach (var arg in args)
             {
-                using (System.IO.StreamWriter shiftsFile = new System.IO.StreamWriter(arg + ".tsv"))
+               var file = new ThermoRawFile(arg);
+               file.Open();
+               string output_filepath = file.FilePath.Remove(file.FilePath.IndexOf(".raw"), ".raw".Length); //removes .raw at end for output
+                using (System.IO.StreamWriter shiftsFile = new System.IO.StreamWriter(output_filepath + ".tsv"))
                 {
-                    var file = new ThermoRawFile(arg);
-                    file.Open();
-
                     shiftsFile.WriteLine(file.FilePath);
                     Console.WriteLine(file.FilePath);
 
                     foreach (var scan in file)
                     {
-                        double bestIntensity = 0;
-                        double monoError = double.NaN;
-                        foreach (var dist in allDistributions)
+                        if (scan.MsnOrder == 1)
                         {
-                            var monoisotopicPeak = scan.MassSpectrum.newSpectrumExtract(dist[0] - tol, dist[0] + tol).PeakWithHighestY;
-                            if (monoisotopicPeak != null && bestIntensity < monoisotopicPeak.Intensity)
+                            double bestIntensity = 0;
+                            double monoError = double.NaN;
+                            foreach (var dist in allDistributions)
                             {
-                                bestIntensity = monoisotopicPeak.Intensity;
-                                monoError = dist[0] - monoisotopicPeak.MZ;
+                                ThermoMzPeak monoisotopicPeak = null;
+                                try { monoisotopicPeak = scan.MassSpectrum.newSpectrumExtract(dist[0] - tol, dist[0] + tol).PeakWithHighestY; }
+                                catch { }
+                                if (monoisotopicPeak != null && bestIntensity < monoisotopicPeak.Intensity)
+                                {
+                                    bestIntensity = monoisotopicPeak.Intensity;
+                                    monoError = dist[0] - monoisotopicPeak.MZ;
+                                }
                             }
+                            shiftsFile.WriteLine(scan.ScanNumber + "\t" + monoError);
                         }
-                        shiftsFile.WriteLine(scan.ScanNumber + "\t" + monoError);
                     }
                 }
             }
