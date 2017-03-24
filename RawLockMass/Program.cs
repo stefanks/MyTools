@@ -12,7 +12,7 @@ namespace RawLockMass
         static void Main(string[] args)
         {
             UsefulProteomicsDatabases.Loaders.LoadElements("elements.dat");
-            var tol = 0.004;
+            var tol = 0.01;
 
             var Compound1 = new Peptide("NNNNN");
 
